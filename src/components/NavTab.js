@@ -47,7 +47,7 @@ class NavTabs extends React.Component {
       <NoSsr>
         <div className={classes.root}>
           <AppBar position="static">
-            <Tabs fullWidth value={value} onChange={this.handleChange} style={{'background-color': '#eee', 'color': 'red'}}>
+            <Tabs fullWidth value={value} onChange={this.handleChange} style={{'background-color': '#fff', 'color': '#B3296B'}}>
               <LinkTab label="Informar Pago Paciente" href="page1" />
               <LinkTab label="Informar Consumo Prestación" href="page2" />
             </Tabs>
