@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import SimpleAppBar from './components/SimpleAppBar';
-import NavTabs from './components/NavTab';
+import SimpleTab from './components/SimpleTab';
 
 class App extends Component {
   render() {
@@ -9,7 +9,7 @@ class App extends Component {
       <div>
         <SimpleAppBar></SimpleAppBar>
         <div id="container-app">
-          <NavTabs></NavTabs>
+          <SimpleTab></SimpleTab>
         </div>
       </div>
     );
