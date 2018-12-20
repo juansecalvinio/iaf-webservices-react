@@ -11,7 +11,7 @@ const styles = {
   },
 };
 
-function SimpleAppBar(props) {
+function MaterialAppBar(props) {
   const { classes } = props;
 
   return (
@@ -25,8 +25,8 @@ function SimpleAppBar(props) {
   );
 }
 
-SimpleAppBar.propTypes = {
+MaterialAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SimpleAppBar);
+export default withStyles(styles)(MaterialAppBar);

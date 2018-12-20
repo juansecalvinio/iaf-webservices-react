@@ -5,7 +5,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import SimpleCard from './SimpleCard';
+import FormInformarPago from './FormInformarPago';
+import FormInformarConsumo from './FormInformarConsumo';
 
 function TabContainer(props) {
   return (
@@ -26,7 +27,7 @@ const styles = theme => ({
   },
 });
 
-class SimpleTabs extends React.Component {
+class MaterialTabs extends React.Component {
   state = {
     value: 0,
   };
@@ -47,15 +48,15 @@ class SimpleTabs extends React.Component {
             <Tab label="Informar Consumo Prestación" />
           </Tabs>
         </AppBar>
-        {value === 0 && <TabContainer><SimpleCard /></TabContainer>}
-        {value === 1 && <TabContainer><SimpleCard /></TabContainer>}
+        {value === 0 && <TabContainer><FormInformarPago /></TabContainer>}
+        {value === 1 && <TabContainer><FormInformarConsumo /></TabContainer>}
       </div>
     );
   }
 }
 
-SimpleTabs.propTypes = {
+MaterialTabs.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SimpleTabs);
+export default withStyles(styles)(MaterialTabs);

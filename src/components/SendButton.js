@@ -5,9 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import green from '@material-ui/core/colors/green';
 import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
-import CheckIcon from '@material-ui/icons/Check';
-import SaveIcon from '@material-ui/icons/Save';
 
 const styles = theme => ({
   root: {
@@ -68,6 +65,7 @@ class CircularIntegration extends React.Component {
         },
       );
     }
+    console.log('Informado');
   };
 
   render() {
@@ -82,7 +80,7 @@ class CircularIntegration extends React.Component {
         <div className={classes.wrapper}>
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             className={buttonClassname}
             disabled={loading}
             onClick={this.handleButtonClick}
