@@ -39,9 +39,9 @@ function obtenerConsumos(OsId, TipOsId) {
             conexion.query(query, (error, resultado) => {
                 if (error) {
                     reject(`Hubo un problema consultando los consumos: ${error}`);
-                } else if (resultado.length != 0) {
+                } else if (resultado.length !== 0) {
                     var response = {
-                        'consumos': JSON.parse(JSON.stringify(resultado));
+                        'consumos': JSON.parse(JSON.stringify(resultado))
                     }
                 }
             });
@@ -76,7 +76,7 @@ function obtenerProcedimientos(OsId, TipOsId) {
             conexion.query(query, (error, resultado) => {
                 if(error) {
                     reject(`Hubo un error con la consulta de Procedimientos: ${error}`);
-                } else if(resultado.length != 0) {
+                } else if(resultado.length !== 0) {
                     var response = {
                         'resultadoProdecimientos': JSON.parse(JSON.stringify(resultado))
                     }
