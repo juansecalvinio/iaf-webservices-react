@@ -56,6 +56,13 @@ class FormInformarPago extends React.Component {
     multiline: "Controlled",
     buttonLoading: false,
     buttonSuccess: false,
+    response: '',
+    post: '',
+    responseToPost: '',
+  };
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
   };
 
   handleChange = name => event => {
@@ -64,10 +71,39 @@ class FormInformarPago extends React.Component {
     });
   };
 
-  handleClick = (e) => {
+  handleButtonClick = async (e) => {
     e.preventDefault();
-    console.log(e);
-  }
+    console.log(e)
+    
+    const response = await fetch('/api/informarPago', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ post: this.state.post }),
+    });
+    
+    const body = await response.text();
+
+    this.setState({ responseToPost: body });
+    
+    // if (!this.state.loading) {
+    //   this.setState(
+    //     {
+    //       buttonSuccess: false,
+    //       buttonLoading: true,
+    //     },
+    //     () => {
+    //       this.timer = setTimeout(() => {
+    //         this.setState({
+    //           buttonLoading: false,
+    //           buttonSuccess: true,
+    //         });
+    //       }, 2000);
+    //     },
+    //   );
+    // }
+  };
 
   render() {
     const { classes } = this.props;
@@ -114,6 +150,7 @@ class FormInformarPago extends React.Component {
         </div>
       </div>
         </CardActions>
+        <Button>Probar Node JS</Button>
     </Card>        
     );
   }

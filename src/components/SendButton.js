@@ -49,6 +49,7 @@ class CircularIntegration extends React.Component {
   }
 
   handleButtonClick = () => {
+    console.log('Informado');
     if (!this.state.loading) {
       this.setState(
         {
@@ -65,7 +66,6 @@ class CircularIntegration extends React.Component {
         },
       );
     }
-    console.log('Informado');
   };
 
   render() {

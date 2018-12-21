@@ -12,7 +12,7 @@ app.get('/api/hello', (req, res) => {
     res.send({ express: 'Hello from Express' });
 });
 
-app.post('/informarPago', controladorSoap.consumirSoap);
+app.post('/api/informarPago', controladorSoap.consumirSoap);
 
 const puerto = 3335;
 

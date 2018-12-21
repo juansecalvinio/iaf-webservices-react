@@ -6,6 +6,11 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import ButtonLoader from './SendButton';
+import classNames from 'classnames';
+import Button from '@material-ui/core/Button';
+import green from '@material-ui/core/colors/green';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 const styles = theme => ({
   container: {
@@ -28,7 +33,13 @@ const styles = theme => ({
 class FormInformarConsumo extends React.Component {
   state = {
     multiline: "Controlled",
+    buttonLoading: false,
+    buttonSuccess: false,
   };
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
 
   handleChange = name => event => {
     this.setState({
@@ -36,13 +47,38 @@ class FormInformarConsumo extends React.Component {
     });
   };
 
-  handleClick (e) {
+  handleClick = (e) => {
     e.preventDefault();
     console.log(e);
   }
 
+  handleButtonClick = (e) => {
+    e.preventDefault();
+    console.log(e)
+    if (!this.state.loading) {
+      this.setState(
+        {
+          buttonSuccess: false,
+          buttonLoading: true,
+        },
+        () => {
+          this.timer = setTimeout(() => {
+            this.setState({
+              buttonLoading: false,
+              buttonSuccess: true,
+            });
+          }, 2000);
+        },
+      );
+    }
+  }
+
   render() {
     const { classes } = this.props;
+    const { buttonLoading, buttonSuccess } = this.state;
+    const buttonClassname = classNames({
+      [classes.buttonSuccess]: buttonSuccess,
+    });
 
     return (
       <Card className={classes.card}>
@@ -61,7 +97,19 @@ class FormInformarConsumo extends React.Component {
           </form>
         </CardContent>
         <CardActions>
-          <ButtonLoader></ButtonLoader>
+          <div className={classes.buttonRoot}>
+            <div className={classes.buttonWrapper}>
+              <Button
+                variant="contained"
+                color="secondary"
+                className={buttonClassname}
+                disabled={buttonLoading}
+                onClick={this.handleButtonClick}>
+                Informar
+              </Button>
+              {buttonLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+            </div>
+          </div>
         </CardActions>
     </Card>        
     );
