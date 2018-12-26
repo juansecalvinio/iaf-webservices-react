@@ -35,11 +35,7 @@ async function consumirSoap(req, res) {
     const xml = armarXml(req.body.data.pacienteId, req.body.data.tipoDeOrden, req.body.data.ordenId);
     const { response } = await soap(urlPreProduccion, headers, xml, 1000); // Optional timeout parameter(milliseconds)
     const { body } = response;
-    if(response.status !== 200) {
-        res.send(`Se produjo un error en el servicio: ${body}`);
-    } else {
-        res.send(body);
-    }    
+    res.send(body);
 }
 
 module.exports = {

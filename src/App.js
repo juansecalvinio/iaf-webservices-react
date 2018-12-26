@@ -8,13 +8,13 @@ import FormBasic from './components/FormBasic';
 class App extends Component {
   render() {
     return (
-      <FormBasic></FormBasic>
-      // <div>
-      //   <MaterialAppBar></MaterialAppBar>
-      //   <div id="container-app">
-      //     <MaterialTab></MaterialTab>
-      //   </div>
-      // </div>
+      //<FormBasic></FormBasic>
+      <div>
+        <MaterialAppBar></MaterialAppBar>
+        <div id="container-app">
+          <MaterialTab></MaterialTab>
+        </div>
+      </div>
     );
   }
 }

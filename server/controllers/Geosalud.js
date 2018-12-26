@@ -43,6 +43,9 @@ function obtenerConsumos(OsId, TipOsId) {
                     var response = {
                         'consumos': JSON.parse(JSON.stringify(resultado))
                     }
+                    resolve(response);
+                } else {
+                    reject(null);
                 }
             });
         });
@@ -55,24 +58,24 @@ function obtenerProcedimientos(OsId, TipOsId) {
         setTimeout(() => {
             var procedimientos = [];
             var query = `select true as Acreditado, 1.00 as Cantidad, ACTASISTID as Codigo, 1 as CodigoAutorizacion,
-                        false as CodigoEstadoTransaccion, EMPRUC as CuitProfesionalResponsable, OSfChHOR as Fecha, OSfChHOR as FechaGestion,
-                        false as HabilitaAjusteCargos, R.ROLID as IdEspecialidadResponsable, 0.00 as MontoIVAFinan, 0.00 as MontoIVAPaciente,
-                        0.00 as MontoNetoFinan, 0.00 as MontoNetoPaciente, 0.00 as MontoTarifa, 0.00 as MontoTotalFinan, 0.00 as MontoTotalPaciente,
-                        0.00 as PorcentajeCobertura, 0.00 as PorcentajePaciente, false as RequiereAutorizacion, 'P' as Tipo, true as Vigencia
-                        from geosalud.os o
-                        left join rrhh rh on o.osrrhhid = rh.rrhhid
-                        left join osindicact oi on o.tiposid = oi.tiposid and o.osid = oi.osid
-                        left join actasist a on a.actasistid = oi.osindicactactasistid
-                        left join plancom pc on o.osplancomid = pc.plancomid
-                        left join roles r on o.osrolid = r.rolid
-                        left join estos e on e.EstOSId = o.OSUltEstOsId
-                        left join empresas em on em.empid = rh.empid
-                        left join persplan pl on pl.persplanpersid = o.ospersid and pl.persplanplancomid = pc.plancomid
-                        left join prestadores p on pl.persplanprestid = p.prestid and o.ospersprestorigid = p.prestid
-                        left join tipcontrat tc on tc.tipcontratid = pl.persplantipcontratid
-                        left join sectores s on o.ossectid = s.sectid
-                        where PrestSistExtId != ''
-                        and o.tiposid = ${TipOsId} and o.osid = ${OsId};`;
+            false as CodigoEstadoTransaccion, EMPRUC as CuitProfesionalResponsable, OSfChHOR as Fecha, OSfChHOR as FechaGestion,
+            false as HabilitaAjusteCargos, R.ROLID as IdEspecialidadResponsable, 0.00 as MontoIVAFinan, 0.00 as MontoIVAPaciente,
+            0.00 as MontoNetoFinan, 0.00 as MontoNetoPaciente, 0.00 as MontoTarifa, 0.00 as MontoTotalFinan, 0.00 as MontoTotalPaciente,
+            0.00 as PorcentajeCobertura, 0.00 as PorcentajePaciente, false as RequiereAutorizacion, 'P' as Tipo, true as Vigencia
+            from geosalud.os o
+            left join rrhh rh on o.osrrhhid = rh.rrhhid
+            left join osindicact oi on o.tiposid = oi.tiposid and o.osid = oi.osid
+            left join actasist a on a.actasistid = oi.osindicactactasistid
+            left join plancom pc on o.osplancomid = pc.plancomid
+            left join roles r on o.osrolid = r.rolid
+            left join estos e on e.EstOSId = o.OSUltEstOsId
+            left join empresas em on em.empid = rh.empid
+            left join persplan pl on pl.persplanpersid = o.ospersid and pl.persplanplancomid = pc.plancomid
+            left join prestadores p on pl.persplanprestid = p.prestid and o.ospersprestorigid = p.prestid
+            left join tipcontrat tc on tc.tipcontratid = pl.persplantipcontratid
+            left join sectores s on o.ossectid = s.sectid
+            where PrestSistExtId != ''
+            and o.tiposid = ${TipOsId} and o.osid = ${OsId};`;
             conexion.query(query, (error, resultado) => {
                 if(error) {
                     reject(`Hubo un error con la consulta de Procedimientos: ${error}`);

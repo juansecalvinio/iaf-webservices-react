@@ -93,7 +93,7 @@ class FormBasic extends Component {
                 onChange={ e => this.setState({ ordenId: e.target.value }) }
                 value={this.state.ordenId} />
             </p>
-            <button type="submit" onSubmit={this.handleSubmitInformarPago}>Informar</button>
+            <button type="submit">Informar</button>
             <button onClick={this.handleClick}>Ver datos</button>
             <button onClick={this.handleClickProbarNode}>Probar Node JS</button>
             <p>{this.state.response}</p>

@@ -6,34 +6,10 @@ import TextField from "@material-ui/core/TextField";
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-// import ButtonLoader from './SendButton';
 import Button from '@material-ui/core/Button';
-import green from '@material-ui/core/colors/green';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import axios from 'axios';
 
 const styles = theme => ({
-    buttonProgress: {
-        color: green[500],
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-        marginLeft: -12,
-    },
-    buttonSuccess: {
-        backgroundColor: green[500],
-        '&:hover': {
-          backgroundColor: green[700],
-        },
-    },
-    buttonRoot: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    buttonWrapper: {
-        margin: theme.spacing.unit,
-        position: 'relative',
-    },
     container: {
     display: "flex",
     flexWrap: "wrap"
@@ -54,104 +30,102 @@ const styles = theme => ({
 class FormInformarPago extends React.Component {
   state = {
     multiline: "Controlled",
-    buttonLoading: false,
-    buttonSuccess: false,
     response: '',
-    post: '',
     responseToPost: '',
+    pacienteId: '',
+    tipoDeOrden: '',
+    ordenId: '',
   };
 
-  componentWillUnmount() {
-    clearTimeout(this.timer);
-  };
+  probarNode = async () => {
+    const response = await axios.get('http://localhost:5000/api/hello');
+    console.log(response);
+    const body = await response;
+    if(response.status !== 200) throw Error(body.message);
+    return body
+  }
 
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value
-    });
-  };
-
-  handleButtonClick = async (e) => {
+  handleClickProbarNode = (e) => {
     e.preventDefault();
-    console.log(e)
-    
-    const response = await fetch('/api/informarPago', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ post: this.state.post }),
-    });
-    
-    const body = await response.text();
+    this.probarNode()
+    .then(res => {
+        this.setState({ response: res['data']['express'] });
+    })
+    .catch(err => console.log(err));
+  }
 
-    this.setState({ responseToPost: body });
-    
-    // if (!this.state.loading) {
-    //   this.setState(
-    //     {
-    //       buttonSuccess: false,
-    //       buttonLoading: true,
-    //     },
-    //     () => {
-    //       this.timer = setTimeout(() => {
-    //         this.setState({
-    //           buttonLoading: false,
-    //           buttonSuccess: true,
-    //         });
-    //       }, 2000);
-    //     },
-    //   );
-    // }
-  };
+  informarPago = async (data) => {
+    const response = await axios.post(`http://localhost:5000/api/informarPago`, { data });
+    console.log(response);
+    const body = await response;
+    console.log(body);
+    if(response.status !== 200) throw Error(body.message);
+    return body;
+  }
+
+  handleSubmitInformarPago = async (e) => {
+    e.preventDefault();
+
+    const data = {
+        pacienteId: parseInt(this.state.pacienteId),
+        tipoDeOrden: parseInt(this.state.tipoDeOrden),
+        ordenId: parseInt(this.state.ordenId),
+    }
+
+    console.log(data);
+
+    this.informarPago(data)
+    .then(res => {
+        //const xml = xmlToJson.xml2json(res['data'], {compact: false, spaces: 4});
+        const response = res['data'];
+        console.log(response);        
+        this.setState({ responseToPost: response });
+    })
+    .catch(err => console.log(err));
+  }
 
   render() {
     const { classes } = this.props;
-    const { buttonLoading, buttonSuccess } = this.state;
-    const buttonClassname = classNames({
-      [classes.buttonSuccess]: buttonSuccess,
-    });
 
     return (
       <Card className={classes.card}>
-        <CardContent>
-          <form className={classes.container} noValidate autoComplete="off">
-              <TextField
+      <CardContent>
+        <form className={classes.container} noValidate autoComplete="off" onSubmit={this.handleSubmitInformarPago}>          
+            <TextField
               label="Paciente ID"
               className={classes.textField}
-              onChange={this.handleChange("name")}
+              name="pacienteId"
+              onChange={ e => this.setState({ pacienteId: e.target.value }) }
               margin="normal"
-              />
-              <TextField
+            />
+            <TextField
               label="Tipo Orden / Máscara"
               className={classes.textField}
+              name="tipoDeOrden"
+              onChange={ e => this.setState({ tipoDeOrden: e.target.value }) }
               margin="normal"
-              />
-              <TextField
+            />
+            <TextField
               label="Número de Orden"
               className={classes.textField}
+              name="ordenId"
+              onChange={ e => this.setState({ ordenId: e.target.value }) }
               margin="normal"
-              />
-          </form>
+            />
+            <CardActions>
+              <Button
+                variant="contained"
+                color="secondary"
+                type="submit">Informar</Button>
+            </CardActions>
+            <p>{this.state.responseToPost}</p>
+        </form>
         </CardContent>
-        <CardActions>
-        <div className={classes.buttonRoot}>
-        <div className={classes.buttonWrapper}>
-          <Button
-            variant="contained"
-            color="secondary"
-            className={buttonClassname}
-            disabled={buttonLoading}
-            onClick={this.handleButtonClick}
-          >
-            Informar
-          </Button>
-          {buttonLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
-        </div>
-      </div>
-        </CardActions>
-        <Button>Probar Node JS</Button>
-    </Card>        
+        {/* <CardContent>
+          <Button onClick={this.handleClickProbarNode}>Probar Node JS</Button>
+          <p>{this.state.response}</p>
+        </CardContent> */}
+    </Card>
     );
   }
 }
