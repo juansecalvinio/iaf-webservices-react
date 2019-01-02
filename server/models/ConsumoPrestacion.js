@@ -1,5 +1,3 @@
-"use strict";
-
 class ConsumoPrestacion {
     constructor(Ambito, CoberturaID, CodigoOperacion, CodigoSede, CuitEmpresa, CuitProfesionalSolicitante, FechaIndicacion, IdEspecialidadSolicitante, 
     NumeroOrdenOriginal, ObservacionesIndicacion, PlanId, Procedimientos, TipoContratacion, TipoOrdenOriginal, PacienteID) {

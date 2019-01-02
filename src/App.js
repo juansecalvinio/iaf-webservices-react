@@ -9,11 +9,14 @@ class App extends Component {
   render() {
     return (
       //<FormBasic></FormBasic>
-      <div>
+      <div id="screen-app">
         <MaterialAppBar></MaterialAppBar>
-        <div id="container-app">
-          <MaterialTab></MaterialTab>
+        <div className="container-app">
+          <div id="container-app-form">
+            <MaterialTab></MaterialTab>
+          </div>
         </div>
+        
       </div>
     );
   }

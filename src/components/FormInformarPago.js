@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import classNames from 'classnames';
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Card from '@material-ui/core/Card';
@@ -11,19 +10,19 @@ import axios from 'axios';
 
 const styles = theme => ({
     container: {
-    display: "flex",
-    flexWrap: "wrap"
+      display: "flex",
+      flexWrap: "wrap"
     },
     textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+      width: 200
     },
     dense: {
-    marginTop: 19
+      marginTop: 19
     },
     menu: {
-    width: 200
+      width: 200
     }
 });
 
@@ -32,6 +31,7 @@ class FormInformarPago extends React.Component {
     multiline: "Controlled",
     response: '',
     responseToPost: '',
+    error: '',
     pacienteId: '',
     tipoDeOrden: '',
     ordenId: '',
@@ -56,9 +56,7 @@ class FormInformarPago extends React.Component {
 
   informarPago = async (data) => {
     const response = await axios.post(`http://localhost:5000/api/informarPago`, { data });
-    console.log(response);
     const body = await response;
-    console.log(body);
     if(response.status !== 200) throw Error(body.message);
     return body;
   }
@@ -118,8 +116,8 @@ class FormInformarPago extends React.Component {
                 color="secondary"
                 type="submit">Informar</Button>
             </CardActions>
-            <p>{this.state.responseToPost}</p>
         </form>
+        <p>{this.state.responseToPost}</p>
         </CardContent>
         {/* <CardContent>
           <Button onClick={this.handleClickProbarNode}>Probar Node JS</Button>
