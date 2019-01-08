@@ -151,7 +151,6 @@ const consumirSoapInformarConsumo = (consumoPrestacion) => {
                         </soapenv:Body>
                     </soapenv:Envelope>
                     `;
-                    console.log('XML: ', xml);
                     proxy.send(xml, "http://tempuri.org/IVentas/InformarConsumoPrestacion_000006ABM", (response) => {
                         resolve(response);
                     });
@@ -167,10 +166,8 @@ const consumirSoapInformarConsumo = (consumoPrestacion) => {
 function informarConsumo(req, res) {
     const data = req.body.data;
     consumirSoapInformarConsumo(data).then(response => {
-        console.log(response);
         res.send(response);
     }).catch(err => {
-        console.log(err);
         res.status(404).send(err);
     });
 }

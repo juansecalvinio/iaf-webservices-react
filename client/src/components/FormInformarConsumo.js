@@ -12,17 +12,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import { Alert } from 'reactstrap';
-
-Alert.propTypes = {
-  className: PropTypes.string,
-  closeClassName: PropTypes.string,
-  color: PropTypes.string, // default: 'success'
-  isOpen: PropTypes.bool,  // default: true
-  toggle: PropTypes.func,
-  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string])
-}
 
 const styles = theme => ({
   container: {
@@ -48,6 +38,10 @@ const styles = theme => ({
   table: {
     minWidth: 700,
   },
+  alert: {
+    margin: '1%',
+    padding: '1%',
+  },
 });
 
 class FormInformarConsumo extends React.Component {
@@ -55,7 +49,9 @@ class FormInformarConsumo extends React.Component {
     multiline: "Controlled",
     response: '',
     error: '',
-    colorAlert: "success",
+    alertColor: '',
+    alertVisible: false,
+    tableVisible: false,
     tipoDeOrden: '',
     ordenId: '',
     ordenes: [],
@@ -72,7 +68,10 @@ class FormInformarConsumo extends React.Component {
     e.preventDefault();
     this.buscarOrdenes().then((res) => {
       const response = res;
-      this.setState({ ordenes: response['data']['consumos'] });
+      this.setState({ 
+        ordenes: response['data']['consumos'],
+        tableVisible: true,
+      });
     }).catch((err) => {
       console.log(err);
     });
@@ -91,10 +90,17 @@ class FormInformarConsumo extends React.Component {
     var data = this.state.ordenes[0];
     console.log(data);
     this.informarConsumo(data).then(res => {
-      console.log(res.data);
-      this.setState({ response: res.data });
+      console.log(res);
+      this.setState({ 
+        response: res.data,
+        alertColor: "success",
+        alertVisible: true
+      });
       if(res.status !== 200) {
-        this.setState({ colorAlert: "danger" })
+        this.setState({ 
+          alertColor: "danger",
+          alertVisible: true
+        })
       }
       console.log(this.state.response);
     }).catch(err => {
@@ -133,8 +139,9 @@ class FormInformarConsumo extends React.Component {
                   onClick={this.handleBuscarOrdenes}>Buscar</Button>
               </CardActions>
           </form>
-          </CardContent>
-          <Paper className={classes.rootTable}>
+        </CardContent>
+          <div className={classes.rootTable}>
+            { this.state.tableVisible ? 
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
@@ -154,13 +161,16 @@ class FormInformarConsumo extends React.Component {
                   })
                 }
               </TableBody>
-            </Table>
-            <CardActions>
-              <Button variant="contained" color="secondary" onClick={this.handleInformarConsumo}>Informar Consumo</Button>
-            </CardActions>
-            <Alert color={this.state.colorAlert}>{this.state.response}</Alert>
-          </Paper>
-          <Alert>Hola</Alert>        
+              <CardActions>
+                <Button variant="contained" color="secondary" onClick={this.handleInformarConsumo}>Informar Consumo</Button>
+              </CardActions>
+            </Table> : null }
+          </div>
+        <CardContent>
+          <Alert className="alert" color={this.state.alertColor} isOpen={this.state.alertVisible}>
+            {this.state.response}
+          </Alert>
+        </CardContent>         
       </Card>    
     );
   }

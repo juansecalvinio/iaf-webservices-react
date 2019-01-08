@@ -36,6 +36,7 @@ class FormInformarPago extends React.Component {
     pacienteId: '',
     tipoDeOrden: '',
     ordenId: '',
+    alertVisible: false,
   };
 
   probarNode = async () => {
@@ -77,7 +78,10 @@ class FormInformarPago extends React.Component {
     .then(res => {
         const response = res['data'];
         console.log(response);        
-        this.setState({ responseToPost: response });
+        this.setState({ 
+          responseToPost: response,
+          alertVisible: true,
+        });
     })
     .catch(err => console.log(err));
   }
@@ -117,7 +121,11 @@ class FormInformarPago extends React.Component {
                 type="submit">Informar</Button>
             </CardActions>
         </form>
-        <Alert color="primary">{this.state.responseToPost}</Alert>
+        </CardContent>
+        <CardContent>
+          <Alert color="primary" isOpen={this.state.alertVisible}>
+            {this.state.responseToPost}
+          </Alert>
         </CardContent>
     </Card>
     );
