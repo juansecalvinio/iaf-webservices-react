@@ -74,7 +74,6 @@ class FormInformarPago extends React.Component {
 
     this.informarPago(data)
     .then(res => {
-        //const xml = xmlToJson.xml2json(res['data'], {compact: false, spaces: 4});
         const response = res['data'];
         console.log(response);        
         this.setState({ responseToPost: response });

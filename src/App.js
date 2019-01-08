@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import MaterialAppBar from './components/MaterialAppBar';
 import MaterialTab from './components/MaterialTabs';
-import FormBasic from './components/FormBasic';
+//import FormBasic from './components/FormBasic';
 
 
 class App extends Component {

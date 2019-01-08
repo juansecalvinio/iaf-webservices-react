@@ -23,7 +23,7 @@ app.get('/api/obtenerProcedimientos', controladorGeoSalud.obtenerProcedimientos)
 
 // POST
 app.post('/api/informarPago', controladorSoap.consumirSoapInformarPago);
-app.post('/api/informarConsumo', controladorSoap.consumirSoapInformarConsumo);
+app.post('/api/informarConsumo', controladorSoap.informarConsumo);
 
 app.listen(puerto, () => {
     console.log(`Escuchando en el puerto ${puerto}`);

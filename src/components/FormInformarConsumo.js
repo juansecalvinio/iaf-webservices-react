@@ -78,22 +78,34 @@ class FormInformarConsumo extends React.Component {
 
   handleInformarConsumo = (e) => {
     e.preventDefault();
-    console.log('handleProbarXML();')
-    console.log(this.state.ordenes);
-    var resultado = [];
-    this.state.ordenes.forEach(orden => {
-      this.informarConsumo(orden).then((data) => {
-        console.log('Data InformarConsumo: ', data);
-        resultado.push(data);
-      }).catch((err) => {
-        console.log(err);
-      });
-    });
-    console.log('Resultado InformarConsumo: ', resultado);
-    this.setState({ response: resultado });
+    var data = this.state.ordenes[0];
+    console.log(data);
+    this.informarConsumo(data).then(res => {
+      console.log(res.data);
+      this.setState({ response: res.data });
+      console.log(this.state.response);
+    }).catch(err => {
+      console.log(err.response);
+      this.setState({ error: err });
+    });   
+    // this.state.ordenes.forEach(orden => {
+    //   this.informarConsumo(orden).then(res => {
+    //     resultados.resultado.push(res);
+    //   }).catch((err) => {
+    //     console.log(err);
+    //   });
+    // });
+    // axios.post('http://localhost:5000/api/informarConsumo', { data }).then(res => {
+    //   console.log(res);
+    //   this.setState({ response: res });
+    // }).catch(err => {
+    //   console.log(err.response);
+    //   this.setState({ error: err.response });
+    // }); 
   }
 
   render() {
+
     const { classes } = this.props;
 
     return (
@@ -147,6 +159,7 @@ class FormInformarConsumo extends React.Component {
             <CardActions>
               <Button variant="contained" color="secondary" onClick={this.handleInformarConsumo}>Informar Consumo</Button>
             </CardActions>
+            {this.state.response}
           </Paper>          
       </Card>    
     );
