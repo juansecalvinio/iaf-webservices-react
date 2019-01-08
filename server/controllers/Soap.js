@@ -12,7 +12,7 @@ const urlMK = 'http://srvms-mk:8082/Ventas.svc';
 const BasicHttpBinding = require('wcf.js').BasicHttpBinding;
 const Proxy = require('wcf.js').Proxy;
 const binding = new BasicHttpBinding();
-const proxy = new Proxy(binding, urlMK);
+const proxy = new Proxy(binding, urlMKE);
 
 function armarXmlInformarPago(pacienteId, tipoDeOrden, ordenId) {
     return `
@@ -37,122 +37,10 @@ function armarXmlInformarPago(pacienteId, tipoDeOrden, ordenId) {
 
 async function consumirSoapInformarPago(req, res) {
     const xml = armarXmlInformarPago(req.body.data.pacienteId, req.body.data.tipoDeOrden, req.body.data.ordenId);
-    const { response } = await soap(urlGEOSaludProduccion, {'Content-Type': 'text/xml;charset=UTF-8'}, xml, 1000); // Optional timeout parameter(milliseconds)
+    const { response } = await soap(urlGEOSaludPreProduccion, {'Content-Type': 'text/xml;charset=UTF-8'}, xml, 1000); // Optional timeout parameter(milliseconds)
     const { body } = response;
     res.send(body);
 }
-
-
-// const armarXmlInformarConsumo = (consumoPrestacion) => {
-//     var xmlProcedimientos;
-//     geosalud.obtenerProcedimientos(consumoPrestacion.TipoOrdenOriginal, consumoPrestacion.NumeroOrdenOriginal)
-//     .then((data) => {
-//         var procedimientos = data;
-//         xmlProcedimientos = procedimientos.map(objeto => {
-//             if(typeof(xmlProcedimientos) !== 'undefined') {
-//                 return `${xmlProcedimientos}
-//                 <apim:ConsumoPrestacionProcedimiento>
-//                 <apim:Acreditado>${objeto.Acreditado}</apim:Acreditado>
-//                 <apim:Cantidad>${objeto.Cantidad}</apim:Cantidad>
-//                 <apim:Codigo>${objeto.Codigo}</apim:Codigo>
-//                 <apim:CodigoAutorizacion>${objeto.CodigoAutorizacion}</apim:CodigoAutorizacion>
-//                 <apim:CodigoEstadoTransaccion>${objeto.CodigoEstadoTransaccion}</apim:CodigoEstadoTransaccion>
-//                 <apim:CodigoTransaccion/>
-//                 <apim:CuitProfesionalResponsable>${objeto.CuitProfesionalResponsable}</apim:CuitProfesionalResponsable>
-//                 <apim:DescripcionEquipoEfector/>
-//                 <apim:DescripcionEstadoTransaccion/>
-//                 <apim:DescripcionMensaje/>
-//                 <apim:Fecha>${objeto.Fecha}</apim:Fecha>
-//                 <apim:FechaGestion>${objeto.FechaGestion}</apim:FechaGestion>
-//                 <apim:HabilitaAjusteCargos>${objeto.HabilitaAjusteCargos}</apim:HabilitaAjusteCargos>
-//                 <apim:IdEspecialidadResponsable>${objeto.IdEspecialidadResponsable}</apim:IdEspecialidadResponsable>
-//                 <apim:IdSubEspecialidadResponsable/>
-//                 <apim:MontoIVAFinan>0.00</apim:MontoIVAFinan>
-//                 <apim:MontoIVAPaciente>0.00</apim:MontoIVAPaciente>
-//                 <apim:MontoNetoFinan>0.00</apim:MontoNetoFinan>
-//                 <apim:MontoNetoPaciente>0.00</apim:MontoNetoPaciente>
-//                 <apim:MontoTarifa>0.00</apim:MontoTarifa>
-//                 <apim:MontoTotalFinan>0.00</apim:MontoTotalFinan>
-//                 <apim:MontoTotalPaciente>0.00</apim:MontoTotalPaciente>
-//                 <apim:Observaciones>0.00</apim:Observaciones>
-//                 <apim:PorcentajeCobertura>0.00</apim:PorcentajeCobertura>
-//                 <apim:PorcentajePaciente>0.00</apim:PorcentajePaciente>
-//                 <apim:RequiereAutorizacion>${objeto.RequiereAutorizacion}</apim:RequiereAutorizacion>
-//                 <apim:Tipo>${objeto.Tipo}</apim:Tipo>
-//                 <apim:TipoMoneda/>
-//                 <apim:Vigencia>${objeto.Vigencia}</apim:Vigencia>
-//                 </apim:ConsumoPrestacionProcedimiento>
-//                 `;                
-//             } else {
-//                 return `<apim:ConsumoPrestacionProcedimiento>
-//                         <apim:Acreditado>${objeto.Acreditado}</apim:Acreditado>
-//                         <apim:Cantidad>${objeto.Cantidad}</apim:Cantidad>
-//                         <apim:Codigo>${objeto.Codigo}</apim:Codigo>
-//                         <apim:CodigoAutorizacion>${objeto.CodigoAutorizacion}</apim:CodigoAutorizacion>
-//                         <apim:CodigoEstadoTransaccion>${objeto.CodigoEstadoTransaccion}</apim:CodigoEstadoTransaccion>
-//                         <apim:CodigoTransaccion/>
-//                         <apim:CuitProfesionalResponsable>${objeto.CuitProfesionalResponsable}</apim:CuitProfesionalResponsable>
-//                         <apim:DescripcionEquipoEfector/>
-//                         <apim:DescripcionEstadoTransaccion/>
-//                         <apim:DescripcionMensaje/>
-//                         <apim:Fecha>${objeto.Fecha}</apim:Fecha>
-//                         <apim:FechaGestion>${objeto.FechaGestion}</apim:FechaGestion>
-//                         <apim:HabilitaAjusteCargos>${objeto.HabilitaAjusteCargos}</apim:HabilitaAjusteCargos>
-//                         <apim:IdEspecialidadResponsable>${objeto.IdEspecialidadResponsable}</apim:IdEspecialidadResponsable>
-//                         <apim:IdSubEspecialidadResponsable/>
-//                         <apim:MontoIVAFinan>0.00</apim:MontoIVAFinan>
-//                         <apim:MontoIVAPaciente>0.00</apim:MontoIVAPaciente>
-//                         <apim:MontoNetoFinan>0.00</apim:MontoNetoFinan>
-//                         <apim:MontoNetoPaciente>0.00</apim:MontoNetoPaciente>
-//                         <apim:MontoTarifa>0.00</apim:MontoTarifa>
-//                         <apim:MontoTotalFinan>0.00</apim:MontoTotalFinan>
-//                         <apim:MontoTotalPaciente>0.00</apim:MontoTotalPaciente>
-//                         <apim:Observaciones>0.00</apim:Observaciones>
-//                         <apim:PorcentajeCobertura>0.00</apim:PorcentajeCobertura>
-//                         <apim:PorcentajePaciente>0.00</apim:PorcentajePaciente>
-//                         <apim:RequiereAutorizacion>${objeto.RequiereAutorizacion}</apim:RequiereAutorizacion>
-//                         <apim:Tipo>${objeto.Tipo}</apim:Tipo>
-//                         <apim:TipoMoneda/>
-//                         <apim:Vigencia>${objeto.Vigencia}</apim:Vigencia>
-//                         </apim:ConsumoPrestacionProcedimiento>`;
-//             }
-//         });
-//         return `
-//             <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:apim="http://schemas.datacontract.org/2004/07/APIMarkey">
-//                 <soapenv:Header/>
-//                 <soapenv:Body>
-//                 <tem:InformarConsumoPrestacion_000006ABM>
-//                     <tem:oConsumoPrestacion>
-//                         <apim:Ambito>${consumoPrestacion.Ambito}</apim:Ambito>
-//                         <apim:CoberturaID>${consumoPrestacion.CoberturaID}</apim:CoberturaID>
-//                         <apim:CodigoDiagnostico/>
-//                         <apim:CodigoOperacion>${consumoPrestacion.CodigoOperacion}</apim:CodigoOperacion>
-//                         <apim:CodigoSede>${consumoPrestacion.CodigoSede}</apim:CodigoSede>
-//                         <apim:CuitEmpresa>${consumoPrestacion.CuitEmpresa}</apim:CuitEmpresa>
-//                         <apim:CuitProfesionalSolicitante>${consumoPrestacion.CuitProfesionalSolicitante}</apim:CuitProfesionalSolicitante>
-//                         <apim:Diagnostico/>
-//                         <apim:FechaIndicacion>${consumoPrestacion.FechaIndicacion}</apim:FechaIndicacion>
-//                         <apim:IdEspecialidadSolicitante>${consumoPrestacion.IdEspecialidadSolicitante}</apim:IdEspecialidadSolicitante>
-//                         <apim:IdSubEspecialidadSolicitante/>
-//                         <apim:NumeroOrdenOriginal>${consumoPrestacion.NumeroOrdenOriginal}</apim:NumeroOrdenOriginal>
-//                         <apim:ObservacionesIndicacion/>
-//                         <apim:PacienteID>${consumoPrestacion.PacienteID}</apim:PacienteID>
-//                         <apim:PlanID>${consumoPrestacion.PlanId}</apim:PlanID>
-//                         <apim:Procedimientos>
-//                         ${xmlProcedimientos.join('')}
-//                         </apim:Procedimientos>      
-//                         <apim:TipoContratacion>${consumoPrestacion.TipoContratacion}</apim:TipoContratacion>
-//                         <apim:TipoOrdenOriginal>${consumoPrestacion.TipoOrdenOriginal}</apim:TipoOrdenOriginal>
-//                         <apim:Usuario/>
-//                     </tem:oConsumoPrestacion>
-//                 </tem:InformarConsumoPrestacion_000006ABM>
-//                 </soapenv:Body>
-//             </soapenv:Envelope>
-//             `;
-//     }).catch((err) => {
-//         console.log('Error obtenerProcedimientos: ', err);
-//     });
-// }
 
 const consumirSoapInformarConsumo = (consumoPrestacion) => {
     return new Promise((resolve, reject) => {
@@ -265,7 +153,6 @@ const consumirSoapInformarConsumo = (consumoPrestacion) => {
                     `;
                     console.log('XML: ', xml);
                     proxy.send(xml, "http://tempuri.org/IVentas/InformarConsumoPrestacion_000006ABM", (response) => {
-                        //console.log(JSON.parse(JSON.stringify(response)));
                         resolve(response);
                     });
             }).catch((err) => {
@@ -276,20 +163,6 @@ const consumirSoapInformarConsumo = (consumoPrestacion) => {
     });
 }
 
-// async function consumirSoapInformarConsumo(data) {
-//     console.log('Data de consumirSoapInformarConsumo: ', data);
-//     const xml = armarXmlInformarConsumo(data);
-//     console.log('XML de consumirSoapInformarConsumo: ', xml);
-//     const { body, statusCode } = await soap(urlMKE,  {
-//         'Content-Type': 'text/xml;charset=UTF-8',
-//         'soapAction': "http://tempuri.org/IVentas/InformarConsumoPrestacion_000006ABM"
-//         }, xml, 100); // Optional timeout parameter(milliseconds)
-//     if(statusCode !== 200) {
-//         throw Error(body.message);
-//     } else {
-//         return body;
-//     }
-// }
 
 function informarConsumo(req, res) {
     const data = req.body.data;

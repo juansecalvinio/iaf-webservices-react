@@ -7,6 +7,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
+import { Alert } from 'reactstrap';
 
 const styles = theme => ({
     container: {
@@ -116,12 +117,8 @@ class FormInformarPago extends React.Component {
                 type="submit">Informar</Button>
             </CardActions>
         </form>
-        <p>{this.state.responseToPost}</p>
+        <Alert color="primary">{this.state.responseToPost}</Alert>
         </CardContent>
-        {/* <CardContent>
-          <Button onClick={this.handleClickProbarNode}>Probar Node JS</Button>
-          <p>{this.state.response}</p>
-        </CardContent> */}
     </Card>
     );
   }

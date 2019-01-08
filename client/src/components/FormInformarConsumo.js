@@ -6,14 +6,23 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
-import axios from "../../server/node_modules/axios";
+import axios from "../../../server/node_modules/axios";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { Alert } from 'reactstrap';
 
+Alert.propTypes = {
+  className: PropTypes.string,
+  closeClassName: PropTypes.string,
+  color: PropTypes.string, // default: 'success'
+  isOpen: PropTypes.bool,  // default: true
+  toggle: PropTypes.func,
+  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string])
+}
 
 const styles = theme => ({
   container: {
@@ -46,6 +55,7 @@ class FormInformarConsumo extends React.Component {
     multiline: "Controlled",
     response: '',
     error: '',
+    colorAlert: "success",
     tipoDeOrden: '',
     ordenId: '',
     ordenes: [],
@@ -83,25 +93,14 @@ class FormInformarConsumo extends React.Component {
     this.informarConsumo(data).then(res => {
       console.log(res.data);
       this.setState({ response: res.data });
+      if(res.status !== 200) {
+        this.setState({ colorAlert: "danger" })
+      }
       console.log(this.state.response);
     }).catch(err => {
       console.log(err.response);
       this.setState({ error: err });
-    });   
-    // this.state.ordenes.forEach(orden => {
-    //   this.informarConsumo(orden).then(res => {
-    //     resultados.resultado.push(res);
-    //   }).catch((err) => {
-    //     console.log(err);
-    //   });
-    // });
-    // axios.post('http://localhost:5000/api/informarConsumo', { data }).then(res => {
-    //   console.log(res);
-    //   this.setState({ response: res });
-    // }).catch(err => {
-    //   console.log(err.response);
-    //   this.setState({ error: err.response });
-    // }); 
+    });
   }
 
   render() {
@@ -159,8 +158,9 @@ class FormInformarConsumo extends React.Component {
             <CardActions>
               <Button variant="contained" color="secondary" onClick={this.handleInformarConsumo}>Informar Consumo</Button>
             </CardActions>
-            {this.state.response}
-          </Paper>          
+            <Alert color={this.state.colorAlert}>{this.state.response}</Alert>
+          </Paper>
+          <Alert>Hola</Alert>        
       </Card>    
     );
   }
