@@ -48,7 +48,6 @@ class FormInformarConsumo extends React.Component {
   state = {
     multiline: "Controlled",
     response: '',
-    error: '',
     alertColor: '',
     alertVisible: false,
     tableVisible: false,
@@ -74,12 +73,17 @@ class FormInformarConsumo extends React.Component {
       });
     }).catch((err) => {
       console.log(err);
+      this.setState({
+        response: 'Hubo un error consultando la orden. Verificar que la conexión con la BD de GEO está iniciada.',
+        alertVisible: true,
+        alertColor: "danger"
+      })
     });
   }
 
   informarConsumo = async (data) => {
     const response = await axios.post('http://localhost:5000/api/informarConsumo', { data });
-    console.log(`probarXML: ${response}`);
+    console.log(`probarXML: ${response.data}`);
     const body = await response;
     if(response.status !== 200) throw Error(body.message);
     return body;
@@ -88,24 +92,33 @@ class FormInformarConsumo extends React.Component {
   handleInformarConsumo = (e) => {
     e.preventDefault();
     var data = this.state.ordenes[0];
-    console.log(data);
     this.informarConsumo(data).then(res => {
-      console.log(res);
-      this.setState({ 
-        response: res.data,
-        alertColor: "success",
-        alertVisible: true
-      });
-      if(res.status !== 200) {
-        this.setState({ 
+
+      // Convertir response a JSON
+      const doc = new DOMParser().parseFromString(res.data, 'text/xml');
+      const valueXML = doc.getElementsByTagName('a:EstadoRespuesta');
+      const CodigoRespuesta = valueXML[0].getElementsByTagName('a:CodigoRespuesta')[0].innerHTML
+      const MensajeRespuesta = valueXML[0].getElementsByTagName('a:Mensaje')[0].innerHTML;
+      
+      if(CodigoRespuesta === '500') {
+        this.setState({
+          response: MensajeRespuesta,
           alertColor: "danger",
           alertVisible: true
         })
+      } else {
+        this.setState({
+          response: res.data,
+          alertColor: "success",
+          alertVisible: true
+        });
       }
-      console.log(this.state.response);
     }).catch(err => {
-      console.log(err.response);
-      this.setState({ error: err });
+      console.log(err);
+      this.setState({
+        response: 'Error ejecutar el WebService. Verificar el console.log del navegador para más detalles.',
+        alertColor: "danger",
+      });
     });
   }
 
