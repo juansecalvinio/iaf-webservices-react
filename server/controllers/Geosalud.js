@@ -18,7 +18,7 @@ function APIObtenerConsumos(req, res) {
     1 as CodigoSede, ifnull (PrestNroTribut, 30546741253) as CuitEmpresa, ifnull (em.EMPRUC, o.OSRRHHDerivId) as CuitProfesionalSolicitante,
     OSfChHOR as FechaIndicacion, osrolid as IdEspecialidadSolicitante, o.osid as NumeroOrdenOriginal, '' as ObservacionesIndicacion,
     pp.PrestPlanPlanComSistExtId as PlanId, true as Acreditado, 1.00 as Cantidad, ACTASISTID as Codigo, a.ActAsistDesc as Practica, false as CodigoEstadoTransaccion,
-    em.EMPRUC as CuitProfesionalResponsable, OSfChHOR as Fecha, OSfChHOR as FechaGestion, false as HabilitaAjusteCargos, R.ROLID as IdEspecialidadResponsable,
+    ifnull(em.EMPRUC, 0) as CuitProfesionalResponsable, OSfChHOR as Fecha, OSfChHOR as FechaGestion, false as HabilitaAjusteCargos, R.ROLID as IdEspecialidadResponsable,
     0.00 as MontoIVAFinan, 0.00 as MontoIVAPaciente, 0.00 as MontoNetoFinan, 0.00 as MontoNetoPaciente, 0.00 as MontoTarifa, 0.00 as MontoTotalFinan,
     0.00 as MontoTotalPaciente, 0.00 as PorcentajeCobertura, 0.00 as PorcentajePaciente, false as RequiereAutorizacion, 'P' as Tipo, true as Vigencia,
     pl.PERSPLANTIPCONTRATID as TipoContratacion, o.tipOSId as TipoOrdenOriginal, OSPersId as PacienteID
@@ -55,7 +55,7 @@ function APIObtenerProcedimientos(TipOsId, OsId) {
         setTimeout(()=>{
             var procedimientos = [];
             var query = `select true as Acreditado, 1.00 as Cantidad, ACTASISTID as Codigo, 1 as CodigoAutorizacion,
-            false as CodigoEstadoTransaccion, EMPRUC as CuitProfesionalResponsable, OSfChHOR as Fecha, OSfChHOR as FechaGestion,
+            false as CodigoEstadoTransaccion, ifnull(EMPRUC, 0) as CuitProfesionalResponsable, OSfChHOR as Fecha, OSfChHOR as FechaGestion,
             false as HabilitaAjusteCargos, R.ROLID as IdEspecialidadResponsable, 0.00 as MontoIVAFinan, 0.00 as MontoIVAPaciente,
             0.00 as MontoNetoFinan, 0.00 as MontoNetoPaciente, 0.00 as MontoTarifa, 0.00 as MontoTotalFinan, 0.00 as MontoTotalPaciente,
             0.00 as PorcentajeCobertura, 0.00 as PorcentajePaciente, false as RequiereAutorizacion, 'P' as Tipo, true as Vigencia

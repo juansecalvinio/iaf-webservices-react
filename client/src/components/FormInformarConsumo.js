@@ -67,6 +67,7 @@ class FormInformarConsumo extends React.Component {
     e.preventDefault();
     this.buscarOrdenes().then((res) => {
       const response = res;
+      console.log(res.data)
       this.setState({ 
         ordenes: response['data']['consumos'],
         tableVisible: true,
@@ -95,14 +96,15 @@ class FormInformarConsumo extends React.Component {
     this.informarConsumo(data).then(res => {
 
       // Convertir response a JSON
-      const doc = new DOMParser().parseFromString(res.data, 'text/xml');
-      const valueXML = doc.getElementsByTagName('a:EstadoRespuesta');
-      const CodigoRespuesta = valueXML[0].getElementsByTagName('a:CodigoRespuesta')[0].innerHTML
-      const MensajeRespuesta = valueXML[0].getElementsByTagName('a:Mensaje')[0].innerHTML;
-      
-      if(CodigoRespuesta === '500') {
+      //const doc = new DOMParser().parseFromString(res.data, 'text/xml');
+      //const valueXML = doc.getElementsByTagName('a:EstadoRespuesta');
+      //const CodigoRespuesta = valueXML[0].getElementsByTagName('a:CodigoRespuesta')[0].innerHTML
+      //const MensajeRespuesta = valueXML[0].getElementsByTagName('a:Mensaje')[0].innerHTML;
+      //console.log(doc);
+      console.log(res);
+      if(res.status === '500') {
         this.setState({
-          response: MensajeRespuesta,
+          response: res.data,
           alertColor: "danger",
           alertVisible: true
         })
