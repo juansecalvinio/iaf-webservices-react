@@ -4,7 +4,7 @@
   "author": "jcalvino",
   "license": "ISC",
   "scripts": {
-    "build": "NODE_ENV=production nom run dev:server",
+    "build": "NODE_ENV=production npm run dev:server",
     "client": "cd client && npm start",
     "server": "cd server && npx nodemon app.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
