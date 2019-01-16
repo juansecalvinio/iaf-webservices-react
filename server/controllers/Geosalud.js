@@ -1,5 +1,29 @@
 require('dotenv').config();
+const tunnel = require('tunnel-ssh');
 const mysql = require('mysql');
+
+// // Conexion a tunnel
+// let tunnelOn = false;
+
+// const configTunnel = {
+//     username:process.env.TUNNEL_USERNAME,
+//     Password: process.env.TUNNEL_PASSWORD,
+//     host: process.env.TUNNEL_HOST,
+//     port: process.env.TUNNEL_PORT,
+//     dstHost: process.env.TUNNEL_DEST_HOST,
+//     dstPort: process.env.TUNNEL_DEST_PORT,
+//     localHost: process.env.TUNNEL_LOCALHOST,
+//     localPort: process.env.TUNNEL_LOCALPORT
+// };
+
+// tunnel(configTunnel, function (error, server) {
+//     if(error) {
+//         console.log(error);
+//         tunnelOn = false;
+//     } else {
+//         tunnelOn = true;
+//     }
+// });
 
 // Conexion a GEOSalud
 const conexion = mysql.createConnection({
@@ -37,16 +61,20 @@ function APIObtenerConsumos(req, res) {
     left join sectores s on o.ossectid = s.sectid
     where PrestSistExtId != ''
     and o.tiposid = ${TipOsId} and o.osid = ${OsId};`;
-    conexion.query(query, (error, resultado) => {
-        if (error) {
-            res.status(404).send(`Hubo un problema consultando los consumos: ${error}`);
-        } else {
-            const response = {
-                'consumos': JSON.parse(JSON.stringify(resultado))
+    if(tunnelOn) {
+        conexion.query(query, (error, resultado) => {
+            if (error) {
+                res.status(404).send(`Hubo un problema consultando los consumos: ${error}`);
+            } else {
+                const response = {
+                    'consumos': JSON.parse(JSON.stringify(resultado))
+                }
+                res.send(response);
             }
-            res.send(response);
-        }
-    });
+        });
+    } else {
+        res.status(500).send('Error al conectar con tunnel-ssh');
+    }
 }
 
 // Obtener Procedimientos de un consumo de GEOSalud
@@ -73,19 +101,23 @@ function APIObtenerProcedimientos(TipOsId, OsId) {
             left join sectores s on o.ossectid = s.sectid
             where PrestSistExtId != ''
             and o.tiposid = ${TipOsId} and o.osid = ${OsId};`;
-            conexion.query(query, (error, resultado) => {
-                if(error) {
-                    reject(`Hubo un problema consultando los consumos: ${error}`);
-                } else {
-                    var response = {
-                        'resultadoProdecimientos': JSON.parse(JSON.stringify(resultado))
+            if(tunnelOn){
+                conexion.query(query, (error, resultado) => {
+                    if(error) {
+                        reject(`Hubo un problema consultando los consumos: ${error}`);
+                    } else {
+                        var response = {
+                            'resultadoProdecimientos': JSON.parse(JSON.stringify(resultado))
+                        }
+                        response.resultadoProdecimientos.forEach(procedimiento => {
+                            procedimientos.push(procedimiento);
+                        });
+                        resolve(procedimientos);
                     }
-                    response.resultadoProdecimientos.forEach(procedimiento => {
-                        procedimientos.push(procedimiento);
-                    });
-                    resolve(procedimientos);
-                }
-            });
+                });
+            } else {
+                reject('Error al conectar con tunnel-ssh');
+            }
         }, 100);
     });
 }

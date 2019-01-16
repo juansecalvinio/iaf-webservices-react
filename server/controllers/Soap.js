@@ -12,8 +12,6 @@ const urlMK = 'http://srvms-mk:8082/Ventas.svc';
 const BasicHttpBinding = require('wcf.js').BasicHttpBinding;
 const Proxy = require('wcf.js').Proxy;
 const binding = new BasicHttpBinding();
-binding.maxReceivedMessageSize = 104857600;
-console.log(binding);
 const proxy = new Proxy(binding, urlMK);
 
 function armarXmlInformarPago(pacienteId, tipoDeOrden, ordenId) {

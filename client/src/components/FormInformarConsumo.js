@@ -96,15 +96,16 @@ class FormInformarConsumo extends React.Component {
     this.informarConsumo(data).then(res => {
 
       // Convertir response a JSON
-      //const doc = new DOMParser().parseFromString(res.data, 'text/xml');
-      //const valueXML = doc.getElementsByTagName('a:EstadoRespuesta');
-      //const CodigoRespuesta = valueXML[0].getElementsByTagName('a:CodigoRespuesta')[0].innerHTML
-      //const MensajeRespuesta = valueXML[0].getElementsByTagName('a:Mensaje')[0].innerHTML;
-      //console.log(doc);
+      const doc = new DOMParser().parseFromString(res.data, 'text/xml');
+      const valueXML = doc.getElementsByTagName('a:EstadoRespuesta');
+      const CodigoRespuesta = valueXML[0].getElementsByTagName('a:CodigoRespuesta')[0].innerHTML
+      const MensajeRespuesta = valueXML[0].getElementsByTagName('a:Mensaje')[0].innerHTML;
+      console.log(doc);
       console.log(res);
-      if(res.status === '500') {
+
+      if(CodigoRespuesta === '500') {
         this.setState({
-          response: res.data,
+          response: MensajeRespuesta,
           alertColor: "danger",
           alertVisible: true
         })
@@ -113,8 +114,22 @@ class FormInformarConsumo extends React.Component {
           response: res.data,
           alertColor: "success",
           alertVisible: true
-        });
+        })
       }
+
+      // if(res.status === '500') {
+      //   this.setState({
+      //     response: res.data,
+      //     alertColor: "danger",
+      //     alertVisible: true
+      //   })
+      // } else {
+      //   this.setState({
+      //     response: res.data,
+      //     alertColor: "success",
+      //     alertVisible: true
+      //   });
+      // }
     }).catch(err => {
       console.log(err);
       this.setState({
