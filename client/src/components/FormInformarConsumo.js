@@ -115,21 +115,7 @@ class FormInformarConsumo extends React.Component {
           alertColor: "success",
           alertVisible: true
         })
-      }
-
-      // if(res.status === '500') {
-      //   this.setState({
-      //     response: res.data,
-      //     alertColor: "danger",
-      //     alertVisible: true
-      //   })
-      // } else {
-      //   this.setState({
-      //     response: res.data,
-      //     alertColor: "success",
-      //     alertVisible: true
-      //   });
-      // }
+      };
     }).catch(err => {
       console.log(err);
       this.setState({

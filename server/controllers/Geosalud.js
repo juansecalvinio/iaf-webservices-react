@@ -2,37 +2,53 @@ require('dotenv').config();
 const tunnel = require('tunnel-ssh');
 const mysql = require('mysql');
 
-// // Conexion a tunnel
-// let tunnelOn = false;
 
-// const configTunnel = {
-//     username:process.env.TUNNEL_USERNAME,
-//     Password: process.env.TUNNEL_PASSWORD,
-//     host: process.env.TUNNEL_HOST,
-//     port: process.env.TUNNEL_PORT,
-//     dstHost: process.env.TUNNEL_DEST_HOST,
-//     dstPort: process.env.TUNNEL_DEST_PORT,
-//     localHost: process.env.TUNNEL_LOCALHOST,
-//     localPort: process.env.TUNNEL_LOCALPORT
-// };
-
-// tunnel(configTunnel, function (error, server) {
-//     if(error) {
-//         console.log(error);
-//         tunnelOn = false;
-//     } else {
-//         tunnelOn = true;
-//     }
-// });
-
-// Conexion a GEOSalud
-const conexion = mysql.createConnection({
-    host: process.env.GEOSALUD_HOST,
-    port: process.env.GEOSALUD_PORT,
-    user: process.env.GEOSALUD_USER,
-    password: process.env.GEOSALUD_PASS,
-    database: process.env.GEOSALUD_DB
-});
+const conectarTunel = () => {
+    return new Promise((resolve, reject) => {
+        setTimeout( () => {
+            tunnel({
+                // host: process.env.TUNNEL_HOST,
+                // port: process.env.TUNNEL_PORT,
+                // dstHost: process.env.TUNNEL_DEST_HOST,
+                // dstPort: process.env.TUNNEL_DEST_PORT,
+                // localHost: process.env.TUNNEL_LOCAL_HOST,
+                // localPort: process.env.TUNNEL_LOCAL_PORT,
+                // username: process.env.TUNNEL_USERNAME,
+                // password: process.env.TUNNEL_PASSWORD
+                host: '172.27.184.7',
+                port: 22,
+                dstHost: '172.27.184.11',
+                dstPort: 3306,
+                localHost: '127.0.0.1',
+                localPort: 3334,
+                username: 'root',
+                password: 'Claro.2017'
+            }, (err) => {
+                if(err) reject(err);
+                console.log('Tunnel connected.');
+                // Conexion a GEOSalud
+                let conexion = mysql.createConnection({
+                    host: process.env.GEOSALUD_HOST,
+                    port: process.env.GEOSALUD_PORT,
+                    user: process.env.GEOSALUD_USER,
+                    password: process.env.GEOSALUD_PASS,
+                    database: process.env.GEOSALUD_DB
+                });
+                conexion.on('error', err => {
+                    conexion.end();
+                    reject(err);
+                });
+                conexion.connect((err) => {
+                    if(err) {
+                        conexion.end();
+                        reject(err);
+                    }
+                    resolve(conexion);
+                })
+            })
+        }, 100);
+    });
+}
 
 // Obtener Consumos de GEOSalud
 function APIObtenerConsumos(req, res) {
@@ -61,20 +77,23 @@ function APIObtenerConsumos(req, res) {
     left join sectores s on o.ossectid = s.sectid
     where PrestSistExtId != ''
     and o.tiposid = ${TipOsId} and o.osid = ${OsId};`;
-    if(tunnelOn) {
+    conectarTunel().then((conexion) => {
         conexion.query(query, (error, resultado) => {
             if (error) {
                 res.status(404).send(`Hubo un problema consultando los consumos: ${error}`);
+                conexion.end();
             } else {
                 const response = {
                     'consumos': JSON.parse(JSON.stringify(resultado))
                 }
                 res.send(response);
+                conexion.end();
             }
         });
-    } else {
-        res.status(500).send('Error al conectar con tunnel-ssh');
-    }
+    }).catch((err) => {
+        res.status(404).send('Hubo un error en la conexion de la BD GEOSalud', err);
+        conexion.end();
+    });
 }
 
 // Obtener Procedimientos de un consumo de GEOSalud
@@ -101,10 +120,11 @@ function APIObtenerProcedimientos(TipOsId, OsId) {
             left join sectores s on o.ossectid = s.sectid
             where PrestSistExtId != ''
             and o.tiposid = ${TipOsId} and o.osid = ${OsId};`;
-            if(tunnelOn){
+            conectarTunel().then((conexion) => {
                 conexion.query(query, (error, resultado) => {
                     if(error) {
                         reject(`Hubo un problema consultando los consumos: ${error}`);
+                        conexion.end();
                     } else {
                         var response = {
                             'resultadoProdecimientos': JSON.parse(JSON.stringify(resultado))
@@ -113,11 +133,14 @@ function APIObtenerProcedimientos(TipOsId, OsId) {
                             procedimientos.push(procedimiento);
                         });
                         resolve(procedimientos);
+                        conexion.end();
                     }
                 });
-            } else {
-                reject('Error al conectar con tunnel-ssh');
-            }
+            }).catch((err) => {
+                reject(`Hubo un error conectando la BD GEOSalud ${err}`);
+                conexion.end();
+            });
+            
         }, 100);
     });
 }

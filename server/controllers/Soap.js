@@ -12,7 +12,7 @@ const urlMK = 'http://srvms-mk:8082/Ventas.svc';
 const BasicHttpBinding = require('wcf.js').BasicHttpBinding;
 const Proxy = require('wcf.js').Proxy;
 const binding = new BasicHttpBinding();
-const proxy = new Proxy(binding, urlMK);
+const proxy = new Proxy(binding, urlMKE);
 
 function armarXmlInformarPago(pacienteId, tipoDeOrden, ordenId) {
     return `
@@ -37,7 +37,7 @@ function armarXmlInformarPago(pacienteId, tipoDeOrden, ordenId) {
 
 async function consumirSoapInformarPago(req, res) {
     const xml = armarXmlInformarPago(req.body.data.pacienteId, req.body.data.tipoDeOrden, req.body.data.ordenId);
-    const { response } = await soap(urlGEOSaludPreProduccion, {'Content-Type': 'text/xml;charset=UTF-8'}, xml, 1000); // Optional timeout parameter(milliseconds)
+    const { response } = await soap(urlGEOSaludProduccion, {'Content-Type': 'text/xml;charset=UTF-8'}, xml, 1000); // Optional timeout parameter(milliseconds)
     const { body } = response;
     res.send(body);
 }
