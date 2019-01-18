@@ -40,7 +40,7 @@ class FormInformarPago extends React.Component {
   };
 
   probarNode = async () => {
-    const response = await axios.get('http://localhost:5000/api/hello');
+    const response = await axios.get('/api/hello');
     console.log(response);
     const body = await response;
     if(response.status !== 200) throw Error(body.message);
@@ -57,7 +57,7 @@ class FormInformarPago extends React.Component {
   }
 
   informarPago = async (data) => {
-    const response = await axios.post(`http://localhost:5000/api/informarPago`, { data });
+    const response = await axios.post(`/api/informarPago`, { data });
     const body = await response;
     if(response.status !== 200) throw Error(body.message);
     return body;

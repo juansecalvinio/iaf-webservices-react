@@ -57,7 +57,7 @@ class FormInformarConsumo extends React.Component {
   };
 
   buscarOrdenes = async () => {
-    const response = await axios.get(`http://localhost:5000/api/obtenerConsumos?tiposid=${this.state.tipoDeOrden}&osid=${this.state.ordenId}`);
+    const response = await axios.get(`/api/obtenerConsumos?tiposid=${this.state.tipoDeOrden}&osid=${this.state.ordenId}`);
     const body = await response;
     if(response.status !== 200) throw Error(body.message);
     return body;
@@ -83,7 +83,7 @@ class FormInformarConsumo extends React.Component {
   }
 
   informarConsumo = async (data) => {
-    const response = await axios.post('http://localhost:5000/api/informarConsumo', { data });
+    const response = await axios.post('/api/informarConsumo', { data });
     console.log(`probarXML: ${response.data}`);
     const body = await response;
     if(response.status !== 200) throw Error(body.message);
