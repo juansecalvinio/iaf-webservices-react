@@ -96,47 +96,44 @@ class FormInformarConsumo extends React.Component {
     var data = this.state.ordenes[0];
     this.informarConsumo(data).then(res => {
 
-        if(this.state.cantidadOrdenes > 45) {
+      if(this.state.cantidadOrdenes > 45) {
+        this.setState({
+          response: "No se puede procesar la orden, por la cantidad de prácticas",
+          alertColor: "danger",
+          alertVisible: true
+        });
+      } else {
+        // Convertir response a JSON
+        const doc = new DOMParser().parseFromString(res.data, 'text/xml');
+        const valueXML = doc.getElementsByTagName('a:EstadoRespuesta');
+        console.log(valueXML);
+        const CodigoRespuesta = valueXML[0].getElementsByTagName('a:CodigoRespuesta')[0].innerHTML
+        const MensajeRespuesta = valueXML[0].getElementsByTagName('a:Mensaje')[0].innerHTML;
+        console.log(doc);
+        console.log(res);
+
+        if(CodigoRespuesta === '500') {
           this.setState({
-            response: "No se puede procesar la orden, por la cantidad de prácticas",
+            response: MensajeRespuesta,
             alertColor: "danger",
             alertVisible: true
-          });
+          })
         } else {
-
-          // Convertir response a JSON
-          const doc = new DOMParser().parseFromString(res.data, 'text/xml');
-          const valueXML = doc.getElementsByTagName('a:EstadoRespuesta');
-          console.log(valueXML);
-          const CodigoRespuesta = valueXML[0].getElementsByTagName('a:CodigoRespuesta')[0].innerHTML
-          const MensajeRespuesta = valueXML[0].getElementsByTagName('a:Mensaje')[0].innerHTML;
-          console.log(doc);
-          console.log(res);
-
-          if(CodigoRespuesta === '500') {
-            this.setState({
-              response: MensajeRespuesta,
-              alertColor: "danger",
-              alertVisible: true
-            })
-          } else {
-            this.setState({
-              response: res.data,
-              alertColor: "success",
-              alertVisible: true
-            })
-          };
-        }
-      }).catch(err => {
-        console.log(err);
-        this.setState({
-          response: 'Error ejecutar el WebService. Verificar el console.log del navegador para más detalles.',
-          alertColor: "danger",
-        });
+          this.setState({
+            response: res.data,
+            alertColor: "success",
+            alertVisible: true
+          })
+        };
+      }      
+    }).catch(err => {
+      console.log(err);
+      this.setState({
+        response: 'Error ejecutar el WebService. Verificar el console.log del navegador para más detalles.',
+        alertColor: "danger",
       });
+    });
   }
-}
-  
 
   render() {
 
