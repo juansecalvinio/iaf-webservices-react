@@ -53,6 +53,7 @@ class FormInformarConsumo extends React.Component {
     tableVisible: false,
     tipoDeOrden: '',
     ordenId: '',
+    cantidadOrdenes: '',
     ordenes: [],
   };
 
@@ -67,8 +68,8 @@ class FormInformarConsumo extends React.Component {
     e.preventDefault();
     this.buscarOrdenes().then((res) => {
       const response = res;
-      console.log(res.data)
-      this.setState({ 
+      this.setState({
+        cantidadOrdenes: response['data']['consumos'].length,
         ordenes: response['data']['consumos'],
         tableVisible: true,
       });
@@ -95,35 +96,47 @@ class FormInformarConsumo extends React.Component {
     var data = this.state.ordenes[0];
     this.informarConsumo(data).then(res => {
 
-      // Convertir response a JSON
-      const doc = new DOMParser().parseFromString(res.data, 'text/xml');
-      const valueXML = doc.getElementsByTagName('a:EstadoRespuesta');
-      const CodigoRespuesta = valueXML[0].getElementsByTagName('a:CodigoRespuesta')[0].innerHTML
-      const MensajeRespuesta = valueXML[0].getElementsByTagName('a:Mensaje')[0].innerHTML;
-      console.log(doc);
-      console.log(res);
+        if(this.state.cantidadOrdenes > 45) {
+          this.setState({
+            response: "No se puede procesar la orden, por la cantidad de prácticas",
+            alertColor: "danger",
+            alertVisible: true
+          });
+        } else {
 
-      if(CodigoRespuesta === '500') {
+          // Convertir response a JSON
+          const doc = new DOMParser().parseFromString(res.data, 'text/xml');
+          const valueXML = doc.getElementsByTagName('a:EstadoRespuesta');
+          console.log(valueXML);
+          const CodigoRespuesta = valueXML[0].getElementsByTagName('a:CodigoRespuesta')[0].innerHTML
+          const MensajeRespuesta = valueXML[0].getElementsByTagName('a:Mensaje')[0].innerHTML;
+          console.log(doc);
+          console.log(res);
+
+          if(CodigoRespuesta === '500') {
+            this.setState({
+              response: MensajeRespuesta,
+              alertColor: "danger",
+              alertVisible: true
+            })
+          } else {
+            this.setState({
+              response: res.data,
+              alertColor: "success",
+              alertVisible: true
+            })
+          };
+        }
+      }).catch(err => {
+        console.log(err);
         this.setState({
-          response: MensajeRespuesta,
+          response: 'Error ejecutar el WebService. Verificar el console.log del navegador para más detalles.',
           alertColor: "danger",
-          alertVisible: true
-        })
-      } else {
-        this.setState({
-          response: res.data,
-          alertColor: "success",
-          alertVisible: true
-        })
-      };
-    }).catch(err => {
-      console.log(err);
-      this.setState({
-        response: 'Error ejecutar el WebService. Verificar el console.log del navegador para más detalles.',
-        alertColor: "danger",
+        });
       });
-    });
   }
+}
+  
 
   render() {
 
@@ -156,8 +169,14 @@ class FormInformarConsumo extends React.Component {
               </CardActions>
           </form>
         </CardContent>
-          <div className={classes.rootTable}>
-            { this.state.tableVisible ? 
+          
+        { this.state.tableVisible ? 
+        <div className={classes.rootTable}>
+            <CardContent>
+              <Alert className="alert" color="primary">
+                  Cantidad: {this.state.cantidadOrdenes}
+              </Alert>
+            </CardContent>
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
@@ -180,8 +199,9 @@ class FormInformarConsumo extends React.Component {
               <CardActions>
                 <Button variant="contained" color="secondary" onClick={this.handleInformarConsumo}>Informar Consumo</Button>
               </CardActions>
-            </Table> : null }
-          </div>
+            </Table>
+          </div> : null }
+          
         <CardContent>
           <Alert className="alert" color={this.state.alertColor} isOpen={this.state.alertVisible}>
             {this.state.response}

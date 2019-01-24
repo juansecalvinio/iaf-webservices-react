@@ -12,6 +12,12 @@ const urlMK = 'http://srvms-mk:8082/Ventas.svc';
 const BasicHttpBinding = require('wcf.js').BasicHttpBinding;
 const Proxy = require('wcf.js').Proxy;
 const binding = new BasicHttpBinding();
+// const binding = new BasicHttpBinding(
+//     { ReaderQuotasMaxDepth: "2147483647"
+//     , ReaderQuotasMaxStringContentLength: "2147483647"
+//     , ReaderQuotasMaxArrayLength: "2147483647"
+//     , ReaderQuotasMaxBytesPerRead: "2147483647" 
+//     });
 const proxy = new Proxy(binding, urlMK);
 
 function armarXmlInformarPago(pacienteId, tipoDeOrden, ordenId) {

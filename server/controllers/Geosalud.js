@@ -7,14 +7,6 @@ const conectarTunel = () => {
     return new Promise((resolve, reject) => {
         setTimeout( () => {
             tunnel({
-                // host: process.env.TUNNEL_HOST,
-                // port: process.env.TUNNEL_PORT,
-                // dstHost: process.env.TUNNEL_DEST_HOST,
-                // dstPort: process.env.TUNNEL_DEST_PORT,
-                // localHost: process.env.TUNNEL_LOCAL_HOST,
-                // localPort: process.env.TUNNEL_LOCAL_PORT,
-                // username: process.env.TUNNEL_USERNAME,
-                // password: process.env.TUNNEL_PASSWORD
                 host: '172.27.184.7',
                 port: 22,
                 dstHost: '172.27.184.11',
@@ -62,7 +54,7 @@ function APIObtenerConsumos(req, res) {
     0.00 as MontoIVAFinan, 0.00 as MontoIVAPaciente, 0.00 as MontoNetoFinan, 0.00 as MontoNetoPaciente, 0.00 as MontoTarifa, 0.00 as MontoTotalFinan,
     0.00 as MontoTotalPaciente, 0.00 as PorcentajeCobertura, 0.00 as PorcentajePaciente, false as RequiereAutorizacion, 'P' as Tipo, true as Vigencia,
     pl.PERSPLANTIPCONTRATID as TipoContratacion, o.tipOSId as TipoOrdenOriginal, OSPersId as PacienteID
-    from geosalud.os o
+    from os o
     left join rrhh rh on o.osrrhhid = rh.rrhhid
     left join osindicact oi on o.tiposid = oi.tiposid and o.osid = oi.osid
     left join actasist a on a.actasistid = oi.osindicactactasistid
@@ -106,7 +98,7 @@ function APIObtenerProcedimientos(TipOsId, OsId) {
             false as HabilitaAjusteCargos, R.ROLID as IdEspecialidadResponsable, 0.00 as MontoIVAFinan, 0.00 as MontoIVAPaciente,
             0.00 as MontoNetoFinan, 0.00 as MontoNetoPaciente, 0.00 as MontoTarifa, 0.00 as MontoTotalFinan, 0.00 as MontoTotalPaciente,
             0.00 as PorcentajeCobertura, 0.00 as PorcentajePaciente, false as RequiereAutorizacion, 'P' as Tipo, true as Vigencia
-            from geosalud.os o
+            from os o
             left join rrhh rh on o.osrrhhid = rh.rrhhid
             left join osindicact oi on o.tiposid = oi.tiposid and o.osid = oi.osid
             left join actasist a on a.actasistid = oi.osindicactactasistid
