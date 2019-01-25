@@ -6,7 +6,7 @@ const path = require('path');
 
 // Settings
 const app = express();
-const puerto = 5000;
+const puerto = 8000;
 
 // Middlewares
 app.use(bodyParser.urlencoded({extended: true}));
